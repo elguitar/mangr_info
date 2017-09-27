@@ -1,6 +1,9 @@
 #!/usr/bin/env python3
 
 import urllib.request
+import os
+import sys
+
 def getjson(url):
     with urllib.request.urlopen(url) as response:
         html = response.read()
@@ -18,10 +21,11 @@ def readConfig(filename):
 def main():
     stop = 3735
     linjojenmaara = 5
-    options = readConfig("/home/pi/naytto/options/busapi.conf")
+    options = readConfig(os.path.dirname(os.path.realpath(sys.argv[0])) + "/options/busapi.conf")
     url = "http://api.publictransport.tampere.fi/prod/?request=stop&user=" + options["user"] + "&pass=" + options["password"] + "&code=" + str(stop) + "&dep_limit=" + str(linjojenmaara)
+    print(url)
     result = getjson(url)
-    with open('./db/bussit.json', 'w') as f:
+    with open(os.path.dirname(os.path.realpath(sys.argv[0])) + '/db/bussit.json', 'w') as f:
         f.write(result)
 
 main()
